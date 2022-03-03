@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class UsuarioDAO {
 
@@ -82,9 +83,28 @@ public class UsuarioDAO {
             stmt.close();
             conn.close();
 
-            return num == 0;
+            return num != 0;
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao verificar nome de usuário. " + e.getMessage());
+        }
+
+    }
+
+    public void delete(String username) {
+        String query = "delete from usuario where lower(username) = lower(?)";
+
+        try {
+
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar" + e.getMessage());
         }
 
     }
@@ -122,7 +142,7 @@ public class UsuarioDAO {
     }
 
     public UsuarioModel login(String username, String senha) {
-        String query = "select * from usuario where loser(username) = lower(?)"
+        String query = "select * from usuario where lower(username) = lower(?)"
                 + "and senha = ?";
 
         try {
@@ -151,9 +171,102 @@ public class UsuarioDAO {
                 }
             }
 
+            res.close();
+            stmt.close();
+            conn.close();
+
             return usuario;
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao fazer login." + e.getMessage());
+        }
+    }
+
+    public static boolean isAutorizado(String username) {
+        String query = "select autorizado as aut from usuario where lower(username) = lower(?)";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            int autorizacao = 0;
+
+            stmt.setString(1, username);
+
+            ResultSet res = stmt.executeQuery();
+
+            if (res.next()) {
+                autorizacao = res.getInt("aut");
+            }
+
+            res.close();
+            stmt.close();
+            conn.close();
+
+            return autorizacao == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar autorização!" + e.getMessage());
+        }
+    }
+
+    public void autorizar(String username) {
+        String query = "update usuario set autorizado = 1 where lower(username) = lower(?)";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, username);
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao autorizar!" + e.getMessage());
+        }
+    }
+
+    public ArrayList<UsuarioModel> listarUsuarios() {
+        String query = "select * from usuario";
+
+        try {
+            Connection conn = DBConnection.connect();
+            Statement stmt = conn.createStatement();
+            ResultSet res = stmt.executeQuery(query);
+
+            ArrayList<UsuarioModel> lista = new ArrayList<>();
+
+            while (res.next()) {
+                UsuarioModel usuario = null;
+
+                int id = res.getInt("id");
+                String nome = res.getString("nome");
+                String username = res.getString("username");
+                String senha = res.getString("senha");
+                LocalDate data = res.getDate("cadastro").toLocalDate();
+                boolean admin = res.getInt("admin") == 1;
+                boolean autorizado = res.getInt("autorizado") == 1;
+
+                if (admin) {
+                    usuario = new Admin(id, nome, username, senha, data);
+                } else {
+                    usuario = new Usuario(id, nome, username, senha, data, autorizado);
+                }
+
+                lista.add(usuario);
+
+            }
+            res.close();
+            stmt.close();
+            conn.close();
+
+            if (lista.isEmpty()) {
+
+                return null;
+            }
+
+            return lista;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao recuperar usuários." + e.getMessage());
         }
     }
 

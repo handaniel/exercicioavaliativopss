@@ -9,11 +9,6 @@
             <Property name="text" type="java.lang.String" value="Usuario"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuLogin">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Login"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuAlterar">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Alterar dados"/>
@@ -43,14 +38,6 @@
             <Property name="text" type="java.lang.String" value="Admin"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuAddUsuario">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Adicionar Usu&#xe1;rio"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuAddUsuarioActionPerformed"/>
-              </Events>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuListUsuario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Listar Usuarios"/>

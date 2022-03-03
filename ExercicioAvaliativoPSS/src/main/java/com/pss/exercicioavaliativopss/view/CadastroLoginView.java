@@ -13,12 +13,12 @@ import javax.swing.JTextField;
  *
  * @author handaniels
  */
-public class CadastroView extends javax.swing.JInternalFrame {
+public class CadastroLoginView extends javax.swing.JFrame {
 
     /**
      * Creates new form CadastroView
      */
-    public CadastroView() {
+    public CadastroLoginView() {
         initComponents();
         this.ckbAdmin.setVisible(false);
     }

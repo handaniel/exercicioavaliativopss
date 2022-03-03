@@ -3,28 +3,37 @@ package com.pss.exercicioavaliativopss.presenter;
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
 import com.pss.exercicioavaliativopss.model.Admin;
 import com.pss.exercicioavaliativopss.model.Usuario;
+import com.pss.exercicioavaliativopss.view.CadastroLoginView;
 import com.pss.exercicioavaliativopss.view.CadastroView;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import javax.swing.JOptionPane;
 
-public class CadastroPresenter {
+public class CadastroLoginPresenter {
 
-    private final CadastroView view;
+    private final CadastroLoginView view;
     private final UsuarioDAO dao;
 
-    public CadastroPresenter(boolean admin) {
-        view = new CadastroView();
+    public CadastroLoginPresenter(boolean primeiro) {
+        view = new CadastroLoginView();
         dao = new UsuarioDAO();
 
-        view.getCkbAdmin().setVisible(admin);
+        if (primeiro) {
+            view.getCkbAdmin().setVisible(true);
+            view.getCkbAdmin().setSelected(true);
+            view.getCkbAdmin().setEnabled(false);
+        } else {
+            view.getCkbAdmin().setVisible(false);
+        }
 
         view.getBtnFechar().addActionListener((ActionEvent ae) -> {
+            new LoginPresenter();
             view.dispose();
         });
 
         view.getBtnSalvar().addActionListener((ActionEvent ae) -> {
             salvar();
+            new LoginPresenter();
             view.dispose();
         });
 
@@ -60,7 +69,7 @@ public class CadastroPresenter {
 
     }
 
-    public CadastroView getView() {
+    public CadastroLoginView getView() {
         return view;
     }
 

@@ -1,11 +1,10 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.pss.exercicioavaliativopss.view;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -13,7 +12,7 @@ import javax.swing.JTextField;
  *
  * @author handaniels
  */
-public class LoginView extends javax.swing.JInternalFrame {
+public class LoginView extends javax.swing.JFrame {
 
     /**
      * Creates new form LoginView
@@ -37,7 +36,9 @@ public class LoginView extends javax.swing.JInternalFrame {
         txtSenha = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
-        ckbMostrarSenha = new javax.swing.JCheckBox();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Nome de Usuário");
 
@@ -46,8 +47,6 @@ public class LoginView extends javax.swing.JInternalFrame {
         btnLogin.setText("Login");
 
         btnCadastrar.setText("Cadastrar");
-
-        ckbMostrarSenha.setText("Mostrar Senha");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -63,20 +62,18 @@ public class LoginView extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtUsername)
-                            .addComponent(txtSenha)))
+                            .addComponent(txtSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(ckbMostrarSenha)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnCadastrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnLogin)
-                        .addGap(6, 6, 6)))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLogin)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -87,8 +84,7 @@ public class LoginView extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
-                    .addComponent(btnCadastrar)
-                    .addComponent(ckbMostrarSenha))
+                    .addComponent(btnCadastrar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -111,14 +107,6 @@ public class LoginView extends javax.swing.JInternalFrame {
         this.btnLogin = btnLogin;
     }
 
-    public JCheckBox getCkbMostrarSenha() {
-        return ckbMostrarSenha;
-    }
-
-    public void setCkbMostrarSenha(JCheckBox ckbMostrarSenha) {
-        this.ckbMostrarSenha = ckbMostrarSenha;
-    }
-
     public JPasswordField getTxtSenha() {
         return txtSenha;
     }
@@ -139,7 +127,6 @@ public class LoginView extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JCheckBox ckbMostrarSenha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPasswordField txtSenha;

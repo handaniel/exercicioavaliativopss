@@ -41,13 +41,11 @@ public class PrincipalView extends javax.swing.JFrame {
         btnNotificacoes = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuUsuario = new javax.swing.JMenu();
-        mnuLogin = new javax.swing.JMenuItem();
         mnuAlterar = new javax.swing.JMenuItem();
         mnuLogout = new javax.swing.JMenuItem();
         mnuConfiguracoes = new javax.swing.JMenu();
         mnuLogs = new javax.swing.JMenuItem();
         mnuAdmin = new javax.swing.JMenu();
-        mnuAddUsuario = new javax.swing.JMenuItem();
         mnuListUsuario = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -72,9 +70,6 @@ public class PrincipalView extends javax.swing.JFrame {
 
         mnuUsuario.setText("Usuario");
 
-        mnuLogin.setText("Login");
-        mnuUsuario.add(mnuLogin);
-
         mnuAlterar.setText("Alterar dados");
         mnuUsuario.add(mnuAlterar);
 
@@ -91,14 +86,6 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenuBar1.add(mnuConfiguracoes);
 
         mnuAdmin.setText("Admin");
-
-        mnuAddUsuario.setText("Adicionar Usuário");
-        mnuAddUsuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuAddUsuarioActionPerformed(evt);
-            }
-        });
-        mnuAdmin.add(mnuAddUsuario);
 
         mnuListUsuario.setText("Listar Usuarios");
         mnuAdmin.add(mnuListUsuario);
@@ -142,10 +129,6 @@ public class PrincipalView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mnuAddUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAddUsuarioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mnuAddUsuarioActionPerformed
-
     public JButton getBtnNotificacoes() {
         return btnNotificacoes;
     }
@@ -176,14 +159,6 @@ public class PrincipalView extends javax.swing.JFrame {
 
     public void setLblUser(JLabel lblUser) {
         this.lblUser = lblUser;
-    }
-
-    public JMenuItem getMnuAddUsuario() {
-        return mnuAddUsuario;
-    }
-
-    public void setMnuAddUsuario(JMenuItem mnuAddUsuario) {
-        this.mnuAddUsuario = mnuAddUsuario;
     }
 
     public JMenu getMnuAdmin() {
@@ -218,14 +193,6 @@ public class PrincipalView extends javax.swing.JFrame {
         this.mnuListUsuario = mnuListUsuario;
     }
 
-    public JMenuItem getMnuLogin() {
-        return mnuLogin;
-    }
-
-    public void setMnuLogin(JMenuItem mnuLogin) {
-        this.mnuLogin = mnuLogin;
-    }
-
     public JMenuItem getMnuLogout() {
         return mnuLogout;
     }
@@ -258,12 +225,10 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JLabel lblTipoUser;
     private javax.swing.JLabel lblUser;
-    private javax.swing.JMenuItem mnuAddUsuario;
     private javax.swing.JMenu mnuAdmin;
     private javax.swing.JMenuItem mnuAlterar;
     private javax.swing.JMenu mnuConfiguracoes;
     private javax.swing.JMenuItem mnuListUsuario;
-    private javax.swing.JMenuItem mnuLogin;
     private javax.swing.JMenuItem mnuLogout;
     private javax.swing.JMenuItem mnuLogs;
     private javax.swing.JMenu mnuUsuario;
