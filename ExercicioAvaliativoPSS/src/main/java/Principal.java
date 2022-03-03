@@ -4,19 +4,14 @@ import com.pss.exercicioavaliativopss.factory.Database.DBConnection;
 import com.pss.exercicioavaliativopss.presenter.LoginPresenter;
 
 public class Principal {
-    
+
     public static void main(String[] args) {
 
-        //Inicializa DB
+        // Inicializa DB
         DBConnection.criaDiretorio();
         UsuarioDAO.criarTabelaUsuario();
-        
-        UsuarioDAO dao = new UsuarioDAO();
-        
-        dao.autorizar("ceiton");
-        System.out.println(UsuarioDAO.isAutorizado("ceiton"));
-        
+
         new LoginPresenter();
-        
+
     }
 }

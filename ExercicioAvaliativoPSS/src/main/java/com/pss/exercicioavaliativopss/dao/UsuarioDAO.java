@@ -91,7 +91,7 @@ public class UsuarioDAO {
     }
 
     public void delete(String username) {
-        String query = "delete from usuario where lower(username) = lower(?)";
+        String query = "delete from usuario where lower(username) = lower('?')";
 
         try {
 
