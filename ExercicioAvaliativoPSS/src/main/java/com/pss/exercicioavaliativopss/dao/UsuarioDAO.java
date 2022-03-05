@@ -90,14 +90,40 @@ public class UsuarioDAO {
 
     }
 
-    public void delete(String username) {
-        String query = "delete from usuario where lower(username) = lower('?')";
+    public void update(UsuarioModel usuario) {
+        String query = "update usuario"
+                + "set nome = ?,"
+                + "username = ?,"
+                + "senha = ?"
+                + "where id = ?";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, usuario.getNome());
+            stmt.setString(2, usuario.getUsername());
+            stmt.setString(3, usuario.getSenha());
+            stmt.setInt(4, usuario.getId());
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar usuário!" + e.getMessage());
+        }
+    }
+
+    public void delete(int id) {
+        String query = "delete from usuario where id = ?)";
 
         try {
 
             Connection conn = DBConnection.connect();
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, username);
+            stmt.setInt(1, id);
             stmt.executeUpdate();
 
             stmt.close();
@@ -267,6 +293,48 @@ public class UsuarioDAO {
             return lista;
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao recuperar usuários." + e.getMessage());
+        }
+    }
+
+    private ArrayList<UsuarioModel> procura(String texto) {
+        String query = "select * from usuario"
+                + "where cast(id as char) like ? or "
+                + "name like ? or"
+                + "username like ?"
+                + "order by nome";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, "%" + texto + "%");
+            stmt.setString(2, "%" + texto + "%");
+            stmt.setString(3, "%" + texto + "%");
+
+            ResultSet res = stmt.executeQuery();
+
+            ArrayList<UsuarioModel> lista = new ArrayList<>();
+
+            while (res.next()) {
+                int id = res.getInt("id");
+                String nome = res.getString("nome");
+                String username = res.getString("username");
+                String senha = res.getString("senha");
+                LocalDate data = res.getDate("cadastro").toLocalDate();
+                boolean admin = res.getInt("admin") == 1;
+                boolean autorizado = res.getInt("autorizado") == 1;
+
+                if (admin) {
+                    lista.add(new Admin(nome, username, senha, data));
+                } else {
+                    lista.add(new Usuario(nome, username, senha, data, autorizado));
+                }
+            }
+
+            return lista;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar usuários!" + e.getMessage());
         }
     }
 

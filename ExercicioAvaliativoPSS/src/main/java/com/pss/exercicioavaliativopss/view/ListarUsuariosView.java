@@ -6,6 +6,7 @@ package com.pss.exercicioavaliativopss.view;
 
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 /**
  *
@@ -36,6 +37,8 @@ public class ListarUsuariosView extends javax.swing.JInternalFrame {
         btnEnviarNotificacao = new javax.swing.JButton();
         btnAddUsuario = new javax.swing.JButton();
         btnVisualizar = new javax.swing.JButton();
+        txtBusca = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
 
         tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -60,14 +63,18 @@ public class ListarUsuariosView extends javax.swing.JInternalFrame {
 
         btnVisualizar.setText("Visualizar");
 
+        btnBuscar.setText("Buscar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(111, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 105, Short.MAX_VALUE)
                         .addComponent(btnAddUsuario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEnviarNotificacao)
@@ -77,14 +84,21 @@ public class ListarUsuariosView extends javax.swing.JInternalFrame {
                         .addComponent(btnVisualizar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnFechar))
-                    .addComponent(jScrollPane1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtBusca)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFechar)
@@ -108,6 +122,22 @@ public class ListarUsuariosView extends javax.swing.JInternalFrame {
 
     public JButton getBtnAutorizar() {
         return btnAutorizar;
+    }
+
+    public JButton getBtnBuscar() {
+        return btnBuscar;
+    }
+
+    public void setBtnBuscar(JButton btnBuscar) {
+        this.btnBuscar = btnBuscar;
+    }
+
+    public JTextField getTxtBusca() {
+        return txtBusca;
+    }
+
+    public void setTxtBusca(JTextField txtBusca) {
+        this.txtBusca = txtBusca;
     }
 
     public void setBtnAutorizar(JButton btnAutorizar) {
@@ -149,10 +179,12 @@ public class ListarUsuariosView extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddUsuario;
     private javax.swing.JButton btnAutorizar;
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEnviarNotificacao;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnVisualizar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblUsuarios;
+    private javax.swing.JTextField txtBusca;
     // End of variables declaration//GEN-END:variables
 }
