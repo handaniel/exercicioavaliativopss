@@ -143,7 +143,7 @@ public class UsuarioDAO {
             Connection conn = DBConnection.connect();
             PreparedStatement stmt = conn.prepareStatement(query);
 
-            //Variável para verificar se o perfil é admin e está autorizado
+            // Variável para verificar se o perfil é admin e está autorizado
             int aux = 0;
 
             if (Admin.class.isInstance(novo)) {
@@ -207,6 +207,33 @@ public class UsuarioDAO {
         }
     }
 
+    public static boolean isAutorizado(int id) {
+        String query = "select autorizado as aut from usuario where id = ?";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            int autorizacao = 0;
+
+            stmt.setInt(1, id);
+
+            ResultSet res = stmt.executeQuery();
+
+            if (res.next()) {
+                autorizacao = res.getInt("aut");
+            }
+
+            res.close();
+            stmt.close();
+            conn.close();
+
+            return autorizacao == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar autorização!" + e.getMessage());
+        }
+    }
+
     public static boolean isAutorizado(String username) {
         String query = "select autorizado as aut from usuario where lower(username) = lower(?)";
 
@@ -231,6 +258,23 @@ public class UsuarioDAO {
             return autorizacao == 1;
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao verificar autorização!" + e.getMessage());
+        }
+    }
+
+    public void autorizar(int id) {
+        String query = "update usuario set autorizado = 1 where id = ?";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao autorizar!" + e.getMessage());
         }
     }
 
@@ -325,9 +369,9 @@ public class UsuarioDAO {
                 boolean autorizado = res.getInt("autorizado") == 1;
 
                 if (admin) {
-                    lista.add(new Admin(nome, username, senha, data));
+                    lista.add(new Admin(id, nome, username, senha, data));
                 } else {
-                    lista.add(new Usuario(nome, username, senha, data, autorizado));
+                    lista.add(new Usuario(id, nome, username, senha, data, autorizado));
                 }
             }
 
@@ -335,6 +379,48 @@ public class UsuarioDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar usuários!" + e.getMessage());
+        }
+    }
+
+    public static String getUsernameById(int id) {
+        String query = "select username from usuario where id = ?";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            String username = null;
+
+            stmt.setInt(1, id);
+            ResultSet res = stmt.executeQuery();
+
+            if (res.next()) {
+                username = res.getString("username");
+            }
+
+            return username;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar usuário!" + e.getMessage());
+        }
+    }
+
+    public static int getIdByUsername(String username) {
+        String query = "select id from usuario where lower(username) = lower(?)";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            int id = 0;
+
+            stmt.setString(1, username);
+            ResultSet res = stmt.executeQuery();
+
+            if (res.next()) {
+                id = res.getInt("id");
+            }
+
+            return id;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar usuário!" + e.getMessage());
         }
     }
 

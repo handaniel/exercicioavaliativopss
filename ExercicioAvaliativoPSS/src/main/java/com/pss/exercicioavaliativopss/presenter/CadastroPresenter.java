@@ -6,6 +6,7 @@ import com.pss.exercicioavaliativopss.model.Usuario;
 import com.pss.exercicioavaliativopss.view.CadastroView;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 public class CadastroPresenter {
@@ -13,7 +14,7 @@ public class CadastroPresenter {
     private final CadastroView view;
     private final UsuarioDAO dao;
 
-    public CadastroPresenter(boolean admin) {
+    public CadastroPresenter(JDesktopPane desktop, boolean admin) {
         view = new CadastroView();
         dao = new UsuarioDAO();
 

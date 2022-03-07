@@ -1,11 +1,11 @@
 package com.pss.exercicioavaliativopss.presenter;
 
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
-import com.pss.exercicioavaliativopss.model.Admin;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
 import com.pss.exercicioavaliativopss.view.ListarUsuariosView;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,15 +16,14 @@ public class ListarUsuariosPresenter {
     private DefaultTableModel tmUsuarios;
     private String admin;
 
-    public ListarUsuariosPresenter(String admin) {
+    public ListarUsuariosPresenter(String admin, JDesktopPane desktop) {
         view = new ListarUsuariosView();
         dao = new UsuarioDAO();
         this.admin = admin;
 
         tmUsuarios = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Nome", "Data do Cadastro", "Notificações Enviadas", "Notificações Lidas"}
-        ) {
+                new String[]{"Nome", "Data do Cadastro", "Notificações Enviadas", "Notificações Lidas"}) {
             @Override
             public boolean isCellEditable(final int row, final int column) {
                 return false;
@@ -42,7 +41,8 @@ public class ListarUsuariosPresenter {
             view.getBtnVisualizar().setEnabled(true);
             view.getBtnEnviarNotificacao().setEnabled(true);
             if (view.getTblUsuarios().getSelectedRow() >= 0) {
-                String username = view.getTblUsuarios().getValueAt(view.getTblUsuarios().getSelectedRow(), 0).toString();
+                String username = view.getTblUsuarios().getValueAt(view.getTblUsuarios().getSelectedRow(), 0)
+                        .toString();
                 if (!UsuarioDAO.isAutorizado(username)) {
                     view.getBtnAutorizar().setEnabled(true);
                 }
@@ -65,6 +65,7 @@ public class ListarUsuariosPresenter {
 
         });
 
+        desktop.add(view);
         view.setVisible(true);
     }
 

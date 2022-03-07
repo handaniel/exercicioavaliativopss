@@ -1,40 +1,68 @@
 package com.pss.exercicioavaliativopss.presenter;
 
-import com.pss.exercicioavaliativopss.model.Admin;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
-import com.pss.exercicioavaliativopss.model.interfaces.InterfaceUsuarioObserver;
 import com.pss.exercicioavaliativopss.model.state.LoginState;
 import com.pss.exercicioavaliativopss.view.PrincipalView;
 import java.awt.event.ActionEvent;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObserver;
+import com.pss.exercicioavaliativopss.model.state.UsuarioLoggedOutState;
+import javax.swing.JInternalFrame;
 
-public class PrincipalPresenter implements InterfaceUsuarioObserver {
+public class PrincipalPresenter implements InterfaceObserver {
 
     private final PrincipalView view;
     private UsuarioModel usuario;
     private LoginState state;
     private int numUsuarios;
 
-    public PrincipalPresenter(UsuarioModel usuario) {
+    public PrincipalPresenter() {
         view = new PrincipalView();
 
-        if (Admin.class.isInstance(usuario)) {
-            view.getLblTipoUser().setText("Admin");
-            view.getMnuAdmin().setVisible(true);
-        } else {
-            view.getLblTipoUser().setText("Usuário");
-        }
-        view.getLblUser().setText(usuario.getUsername());
+        setState(new UsuarioLoggedOutState(this));
 
         view.getMnuListUsuario().addActionListener((ActionEvent ae) -> {
-            view.getDesktop().add(new ListarUsuariosPresenter(usuario.getUsername()).getView());
+            new ListarUsuariosPresenter(usuario.getNome(), view.getDesktop());
+        });
+
+        view.getMnuLogs().addActionListener((ActionEvent ae) -> {
+
+        });
+
+        view.getMnuListUsuario().addActionListener((ActionEvent ae) -> {
+
+        });
+
+        view.getBtnNotificacoes().addActionListener((ActionEvent ae) -> {
+
         });
 
         view.getMnuLogout().addActionListener((ActionEvent ae) -> {
-            new LoginPresenter();
-            view.dispose();
+            logout();
         });
 
         view.setVisible(true);
+    }
+
+    private void login() {
+        new LoginPresenter(view.getDesktop()).addObserver(this);
+    }
+
+    private void update(UsuarioModel usuario) {
+        this.usuario = usuario;
+
+        state.login(usuario);
+
+    }
+
+    private void fechaInternalFrames() {
+        for (JInternalFrame j : view.getDesktop().getAllFrames()) {
+            j.dispose();
+        }
+    }
+
+    private void logout() {
+        fechaInternalFrames();
+        state.logout();
     }
 
     public void setState(LoginState state) {
@@ -47,6 +75,18 @@ public class PrincipalPresenter implements InterfaceUsuarioObserver {
 
     public UsuarioModel getUsuario() {
         return usuario;
+    }
+
+    public void setUsuario(UsuarioModel usuario) {
+        this.usuario = usuario;
+    }
+
+    @Override
+    public void update(Object obj) {
+        if (UsuarioModel.class.isInstance(obj)) {
+            update((UsuarioModel) obj);
+        }
+
     }
 
 }

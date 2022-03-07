@@ -3,20 +3,26 @@ package com.pss.exercicioavaliativopss.presenter;
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
 import com.pss.exercicioavaliativopss.model.Admin;
 import com.pss.exercicioavaliativopss.model.Usuario;
+import com.pss.exercicioavaliativopss.model.UsuarioModel;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObservable;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObserver;
 import com.pss.exercicioavaliativopss.view.CadastroLoginView;
-import com.pss.exercicioavaliativopss.view.CadastroView;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
-public class CadastroLoginPresenter {
+public class CadastroLoginPresenter implements InterfaceObservable {
 
     private final CadastroLoginView view;
     private final UsuarioDAO dao;
+    private final ArrayList<InterfaceObserver> observers;
 
-    public CadastroLoginPresenter(boolean primeiro) {
+    public CadastroLoginPresenter(JDesktopPane desktop, LoginPresenter login, boolean primeiro) {
         view = new CadastroLoginView();
         dao = new UsuarioDAO();
+        observers = new ArrayList<>();
 
         if (primeiro) {
             view.getCkbAdmin().setVisible(true);
@@ -27,20 +33,19 @@ public class CadastroLoginPresenter {
         }
 
         view.getBtnFechar().addActionListener((ActionEvent ae) -> {
-            new LoginPresenter();
             view.dispose();
         });
 
         view.getBtnSalvar().addActionListener((ActionEvent ae) -> {
-            salvar();
-            new LoginPresenter();
+            salvar(login, desktop);
             view.dispose();
         });
 
+        desktop.add(view);
         view.setVisible(true);
     }
 
-    private void salvar() {
+    private void salvar(LoginPresenter login, JDesktopPane desktop) {
         String nome = view.getTxtNome().getText();
         String username = view.getTxtUsername().getText();
         String senha = String.valueOf(view.getTxtSenha().getPassword());
@@ -54,13 +59,21 @@ public class CadastroLoginPresenter {
             JOptionPane.showMessageDialog(view, "Nome de usuário existente.");
         } else {
             try {
+                UsuarioModel usuario;
                 if (admin) {
-                    dao.inserir(new Admin(nome, username, senha, data));
+                    usuario = new Admin(nome, username, senha, data);
                 } else {
-                    dao.inserir(new Usuario(nome, username, senha, data, false));
+                    usuario = new Usuario(nome, username, senha, data, false);
                 }
-
+                dao.inserir(usuario);
                 JOptionPane.showMessageDialog(view, "Usuário " + nome + " cadastrado com sucesso!");
+
+                ArrayList<InterfaceObserver> temp = login.getObservers();
+                login = new LoginPresenter(desktop);
+
+                for (InterfaceObserver o : temp) {
+                    login.addObserver(o);
+                }
 
             } catch (RuntimeException e) {
                 JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário!");
@@ -71,6 +84,23 @@ public class CadastroLoginPresenter {
 
     public CadastroLoginView getView() {
         return view;
+    }
+
+    @Override
+    public void addObserver(InterfaceObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(InterfaceObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObserver(Object obj) {
+        for (InterfaceObserver o : observers) {
+            o.update((UsuarioModel) obj);
+        }
     }
 
 }

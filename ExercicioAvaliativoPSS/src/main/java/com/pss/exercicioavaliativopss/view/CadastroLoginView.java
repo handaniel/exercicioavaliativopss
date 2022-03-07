@@ -13,7 +13,7 @@ import javax.swing.JTextField;
  *
  * @author handaniels
  */
-public class CadastroLoginView extends javax.swing.JFrame {
+public class CadastroLoginView extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form CadastroView

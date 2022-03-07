@@ -12,7 +12,7 @@ import javax.swing.JTextField;
  *
  * @author handaniels
  */
-public class LoginView extends javax.swing.JFrame {
+public class LoginView extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form LoginView

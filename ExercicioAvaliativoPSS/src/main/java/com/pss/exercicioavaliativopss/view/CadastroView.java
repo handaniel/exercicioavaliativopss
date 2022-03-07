@@ -43,8 +43,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
         txtSenha = new javax.swing.JPasswordField();
         txtSenhaRepeticao = new javax.swing.JPasswordField();
         ckbAdmin = new javax.swing.JCheckBox();
-
-        setResizable(false);
+        jButton1 = new javax.swing.JButton();
 
         jLabel1.setText("Nome");
 
@@ -60,6 +59,8 @@ public class CadastroView extends javax.swing.JInternalFrame {
 
         ckbAdmin.setText("Administrador");
 
+        jButton1.setText("Remover");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -73,7 +74,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                             .addComponent(txtNome)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -86,9 +87,11 @@ public class CadastroView extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(ckbAdmin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnFechar)
+                        .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addComponent(btnSalvar)))
+                        .addComponent(btnSalvar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnFechar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,7 +117,8 @@ public class CadastroView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
                     .addComponent(btnFechar)
-                    .addComponent(ckbAdmin))
+                    .addComponent(ckbAdmin)
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -181,6 +185,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JCheckBox ckbAdmin;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
