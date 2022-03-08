@@ -41,6 +41,8 @@ public class CadastroPresenter {
         dao = new UsuarioDAO();
 
         view.getCkbAdmin().setVisible(admin);
+        view.getCkbAdmin().setSelected(admin);
+        view.getCkbAdmin().setEnabled(false);
 
         view.getBtnRemover().setVisible(false);
         view.getTxtNome().setText(usuario.getNome());
