@@ -1,4 +1,3 @@
-
 package com.pss.exercicioavaliativopss.presenter;
 
 import java.util.ArrayList;
@@ -18,10 +17,20 @@ public class ConfiguracoesPresenter implements InterfaceObservable {
 
     private final ConfiguracoesView view;
     private final ArrayList<InterfaceObserver> observers;
+    private InterfaceLogger logger;
 
-    public ConfiguracoesPresenter(JDesktopPane desktop) {
+    public ConfiguracoesPresenter(JDesktopPane desktop, InterfaceLogger logger) {
         view = new ConfiguracoesView();
         observers = new ArrayList<>();
+        this.logger = logger;
+
+        if (LoggerCSV.class.isInstance(logger)) {
+            view.getRbtCSV().setSelected(true);
+        } else if (LoggerJSON.class.isInstance(logger)) {
+            view.getRbtJSON().setSelected(true);
+        } else {
+            view.getRbtXML().setSelected(true);
+        }
 
         view.getBtnFechar().addActionListener((ActionEvent ae) -> {
             view.dispose();
@@ -29,6 +38,7 @@ public class ConfiguracoesPresenter implements InterfaceObservable {
 
         view.getBtnSalvar().addActionListener((ActionEvent ae) -> {
             aplicar();
+            view.dispose();
         });
 
         desktop.add(view);

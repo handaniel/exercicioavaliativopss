@@ -7,7 +7,7 @@ public class UsuarioLoggedInState extends LoginState {
     public UsuarioLoggedInState(PrincipalPresenter presenter) {
         super(presenter);
 
-        presenter.getView().getLblTipoUser().setText("Admin");
+        presenter.getView().getLblTipoUser().setText("Usuário");
         presenter.getView().getLblUser().setText(presenter.getUsuario().getUsername());
         presenter.getView().getBtnNotificacoes().setText("Notificações");
         presenter.getView().getMnuUsuario().setVisible(true);

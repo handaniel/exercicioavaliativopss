@@ -2,12 +2,15 @@ package com.pss.exercicioavaliativopss.presenter;
 
 import com.pss.exercicioavaliativopss.dao.NotificacaoDAO;
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
+import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
 import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObservable;
 import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObserver;
 import com.pss.exercicioavaliativopss.view.NotificacoesView;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class NotificacoesPresenter implements InterfaceObservable {
@@ -16,15 +19,17 @@ public class NotificacoesPresenter implements InterfaceObservable {
     private final ArrayList<InterfaceObserver> observers;
     private final UsuarioModel usuario;
     private DefaultTableModel tmNotificacoes;
-    private final NotificacaoDAO notDao;
-    private final UsuarioDAO usuarioDao;
+    private final NotificacaoDAO nDao;
+    private final UsuarioDAO uDao;
+    private InterfaceLogger logger;
 
-    public NotificacoesPresenter(JDesktopPane desktop, UsuarioModel usuario) {
+    public NotificacoesPresenter(JDesktopPane desktop, UsuarioModel usuario, InterfaceLogger logger) {
         view = new NotificacoesView();
         observers = new ArrayList<>();
         this.usuario = usuario;
-        notDao = new NotificacaoDAO();
-        usuarioDao = new UsuarioDAO();
+        nDao = new NotificacaoDAO();
+        uDao = new UsuarioDAO();
+        this.logger = logger;
 
         tmNotificacoes = new DefaultTableModel(
                 new Object[][]{},
@@ -35,8 +40,26 @@ public class NotificacoesPresenter implements InterfaceObservable {
             }
         };
 
+        view.getTblNotificacoes().setModel(tmNotificacoes);
+
+        view.getBtnFechar().addActionListener((ActionEvent ae) -> {
+            view.dispose();
+        });
+
+        view.getBtnVisualizar().addActionListener((ActionEvent ae) -> {
+            if (view.getTblNotificacoes().getSelectedRowCount() != 1) {
+                JOptionPane.showMessageDialog(view, "Selecione pelo menos e exatamente UMA linha!");
+            } else {
+                Visualizar();
+            }
+        });
+
         desktop.add(view);
         view.setVisible(true);
+    }
+
+    private void Visualizar() {
+        
     }
 
     @Override

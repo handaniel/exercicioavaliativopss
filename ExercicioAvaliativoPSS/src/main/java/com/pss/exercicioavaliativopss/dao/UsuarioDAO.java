@@ -91,7 +91,7 @@ public class UsuarioDAO {
     }
 
     public void update(UsuarioModel usuario) {
-        String query = "update usuario"
+        String query = "update usuario "
                 + "set nome = ?,"
                 + "username = ?,"
                 + "senha = ?"
@@ -112,7 +112,7 @@ public class UsuarioDAO {
             conn.close();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar usuário!" + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar usuário! " + e.getMessage());
         }
     }
 
@@ -234,6 +234,44 @@ public class UsuarioDAO {
         }
     }
 
+    public UsuarioModel findById(int id) {
+        String query = "select * from usuario where id = ?";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, id);
+
+            ResultSet res = stmt.executeQuery();
+
+            UsuarioModel usuario = null;
+
+            if (res.next()) {
+                int id1 = res.getInt("id");
+                String nome = res.getString("nome");
+                String username = res.getString("username");
+                String senha = res.getString("senha");
+                LocalDate data = res.getDate("cadastro").toLocalDate();
+                boolean admin = res.getInt("admin") == 1;
+                boolean autorizado = res.getInt("autorizado") == 1;
+
+                if (admin) {
+                    usuario = new Admin(id1, nome, username, senha, data);
+                } else {
+                    usuario = new Usuario(id1, nome, username, senha, data, autorizado);
+                }
+            }
+            res.close();
+            stmt.close();
+            conn.close();
+
+            return usuario;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao recuperar usuários." + e.getMessage());
+        }
+    }
+
     public static boolean isAutorizado(String username) {
         String query = "select autorizado as aut from usuario where lower(username) = lower(?)";
 
@@ -340,7 +378,7 @@ public class UsuarioDAO {
         }
     }
 
-    private ArrayList<UsuarioModel> procura(String texto) {
+    public ArrayList<UsuarioModel> procura(String texto) {
         String query = "select * from usuario"
                 + "where cast(id as char) like ? or "
                 + "name like ? or"

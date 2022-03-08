@@ -57,6 +57,9 @@ public class ListarUsuariosPresenter {
                         view.getBtnAutorizar().setEnabled(true);
 
                     }
+                } else {
+                    view.getBtnVisualizar().setEnabled(false);
+                    view.getBtnAutorizar().setEnabled(false);
                 }
             }
         }));
@@ -67,6 +70,15 @@ public class ListarUsuariosPresenter {
 
         view.getBtnAutorizar().addActionListener((ActionEvent ae) -> {
             autorizar();
+        });
+
+        view.getBtnVisualizar().addActionListener((ActionEvent ae) -> {
+            int row = view.getTblUsuarios().getSelectedRow();
+            int id = Integer.parseInt(view.getTblUsuarios().getValueAt(row, 0).toString());
+            if (id >= 1) {
+                UsuarioModel temp = uDao.findById(id);
+                new CadastroPresenter(desktop, Admin.class.isInstance(temp), temp);
+            }
         });
 
         view.getBtnEnviarNotificacao().addActionListener(((ActionEvent ae) -> {
@@ -96,11 +108,14 @@ public class ListarUsuariosPresenter {
 
         if (!lista.isEmpty()) {
             for (UsuarioModel u : lista) {
+                int lida = nDao.contaNotificacaoLida(u.getId());
+                int nLida = nDao.contaNotificacaoNaoLida(u.getId());
                 if (!admin.equals(u.getUsername())) {
-                    tmUsuarios.addRow(new Object[]{u.getId(), u.getNome(), u.getDataCadastro()});
+                    tmUsuarios.addRow(new Object[]{u.getId(), u.getNome(), u.getDataCadastro(), lida, nLida});
                 }
             }
         }
+        view.getTblUsuarios().setModel(tmUsuarios);
 
     }
 
@@ -115,7 +130,6 @@ public class ListarUsuariosPresenter {
             for (int row : rows) {
                 int id = Integer.parseInt(view.getTblUsuarios().getValueAt(row, 0).toString());
                 lista.add(id);
-                System.out.println(id);
             }
 
             new EnviarNotificacaoPresenter(logger, desktop, admin, lista);

@@ -47,14 +47,13 @@ public class EnviarNotificacaoPresenter implements InterfaceObservable {
         String msg = view.getTxtMensagem().getText();
 
         try {
-            users.stream().filter(id -> (id != admin.getId())).forEachOrdered(id -> {
+            for (Integer id : users) {
                 dao.inserirNotificacao(new Notificacao(id, admin.getId(), msg, LocalDate.now()));
-            });
+            }
 
             JOptionPane.showMessageDialog(view, "Mensagem enviada com Sucesso!");
 
-            logger.logUsuarioCRUD(new Log("Envio de notificação", admin.getNome(), admin.getUsername(), ""));
-
+            //logger.logUsuarioCRUD(new Log("Envio de notificação", admin.getNome(), admin.getUsername(), ""));
             notifyObserver(null);
             view.dispose();
         } catch (RuntimeException e) {

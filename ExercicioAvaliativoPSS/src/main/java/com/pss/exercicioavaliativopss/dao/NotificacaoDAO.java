@@ -65,6 +65,64 @@ public class NotificacaoDAO {
 
     }
 
+    public int contaNotificacaoLida(int id) {
+        String query = "select count(1) as num from notificacao "
+                + "where destinatario = ? and lida = 1";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, id);
+
+            int num = 0;
+
+            ResultSet res = stmt.executeQuery();
+
+            if (res.next()) {
+                num = res.getInt("num");
+            }
+
+            res.close();
+            stmt.close();
+            conn.close();
+
+            return num;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao contar notificações!" + e.getMessage());
+        }
+
+    }
+
+    public int contaNotificacaoNaoLida(int id) {
+        String query = "select count(1) as num from notificacao "
+                + "where destinatario = ? and lida = 0";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, id);
+
+            int num = 0;
+
+            ResultSet res = stmt.executeQuery();
+
+            if (res.next()) {
+                num = res.getInt("num");
+            }
+
+            res.close();
+            stmt.close();
+            conn.close();
+
+            return num;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao contar notificações!" + e.getMessage());
+        }
+
+    }
+
     public void marcarComoLida(int id) {
         String query = "update usuario "
                 + "set lida = 1 "
@@ -98,6 +156,8 @@ public class NotificacaoDAO {
             stmt.setDate(4, Date.valueOf(notificacao.getDataEnvio()));
 
             stmt.executeUpdate();
+
+            System.out.println("enviada!" + notificacao.getMensagem());
             stmt.close();
             conn.close();
 
