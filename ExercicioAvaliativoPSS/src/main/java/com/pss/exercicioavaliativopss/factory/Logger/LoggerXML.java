@@ -1,22 +1,66 @@
 package com.pss.exercicioavaliativopss.factory.Logger;
 
-import com.pss.exercicioavaliativopss.model.UsuarioModel;
+import com.pss.exercicioavaliativopss.model.Log;
+import java.io.File;
+import java.io.StringWriter;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 public class LoggerXML implements InterfaceLogger {
 
+    private File file;
+    private final String path = "logs/log.xml";
+
+    public LoggerXML() {
+        criarArquivo();
+    }
+
     @Override
     public void criarArquivo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        File diretorio = new File("logs/");
+
+        if (!diretorio.exists()) {
+            diretorio.mkdirs();
+        }
+
+        file = new File(path);
     }
 
     @Override
-    public void logUsuarioCRUD(UsuarioModel usuario, String operacao) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void logUsuarioCRUD(Log log) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Log.class);
+
+            Marshaller marshaller = jaxbContext.createMarshaller();
+
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            StringWriter sw = new StringWriter();
+
+            marshaller.marshal(log, sw);
+
+        } catch (JAXBException e) {
+            throw new RuntimeException("Erro ao gravar Log!" + e.getMessage());
+        }
     }
 
     @Override
-    public void logFalha(UsuarioModel usuario, String operacao, String excessao) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void logFalha(Log log) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Log.class);
+
+            Marshaller marshaller = jaxbContext.createMarshaller();
+
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            StringWriter sw = new StringWriter();
+
+            marshaller.marshal(log, sw);
+
+        } catch (JAXBException e) {
+            throw new RuntimeException("Erro ao gravar Log!" + e.getMessage());
+        }
     }
 
 }

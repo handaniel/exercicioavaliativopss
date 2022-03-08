@@ -92,9 +92,6 @@ public class NotificacaoDAO {
             Connection conn = DBConnection.connect();
             PreparedStatement stmt = conn.prepareStatement(query);
 
-            System.out.println("Destinatario " + notificacao.getDestinatario());
-            System.out.println("Remetente " + notificacao.getRemetente());
-
             stmt.setInt(1, notificacao.getDestinatario());
             stmt.setInt(2, notificacao.getRemetente());
             stmt.setString(3, notificacao.getMensagem());

@@ -13,7 +13,7 @@ public class AdminLoggedInState extends LoginState {
         presenter.getView().getMnuUsuario().setVisible(true);
         presenter.getView().getMnuConfiguracoes().setVisible(true);
         presenter.getView().getBtnNotificacoes().setEnabled(true);
-        
+        presenter.getView().getBtnNotificacoes().setText("Notificações");
 
     }
 

@@ -12,6 +12,7 @@ public class Principal {
         DBConnection.criaDiretorio();
         UsuarioDAO.criarTabelaUsuario();
         NotificacaoDAO.criarTabelaNotificacao();
+        
 
         new PrincipalPresenter();
 

@@ -1,5 +1,8 @@
 package com.pss.exercicioavaliativopss.presenter;
 
+import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
+import com.pss.exercicioavaliativopss.factory.Logger.LoggerCSV;
+import com.pss.exercicioavaliativopss.model.Admin;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
 import com.pss.exercicioavaliativopss.model.state.LoginState;
 import com.pss.exercicioavaliativopss.view.PrincipalView;
@@ -14,21 +17,23 @@ public class PrincipalPresenter implements InterfaceObserver {
     private UsuarioModel usuario;
     private LoginState state;
     private int numUsuarios;
+    private InterfaceLogger logger;
 
     public PrincipalPresenter() {
         view = new PrincipalView();
+        logger = new LoggerCSV();
 
         setState(new UsuarioLoggedOutState(this));
 
         view.getMnuListUsuario().addActionListener((ActionEvent ae) -> {
-            new ListarUsuariosPresenter(usuario.getNome(), view.getDesktop());
+            new ListarUsuariosPresenter((Admin) usuario, view.getDesktop(), logger);
         });
 
         view.getMnuLogs().addActionListener((ActionEvent ae) -> {
-
+            new ConfiguracoesPresenter(view.getDesktop());
         });
 
-        view.getMnuListUsuario().addActionListener((ActionEvent ae) -> {
+        view.getMnuAlterar().addActionListener((ActionEvent ae) -> {
 
         });
 
@@ -51,7 +56,14 @@ public class PrincipalPresenter implements InterfaceObserver {
         this.usuario = usuario;
 
         state.login(usuario);
+    }
 
+    private void update(InterfaceLogger logger) {
+        this.logger = logger;
+
+        fechaInternalFrames();
+
+        setState(new UsuarioLoggedOutState(this));
     }
 
     private void fechaInternalFrames() {
@@ -85,6 +97,8 @@ public class PrincipalPresenter implements InterfaceObserver {
     public void update(Object obj) {
         if (UsuarioModel.class.isInstance(obj)) {
             update((UsuarioModel) obj);
+        } else if (InterfaceLogger.class.isInstance(obj)) {
+            update((InterfaceLogger) logger);
         }
 
     }

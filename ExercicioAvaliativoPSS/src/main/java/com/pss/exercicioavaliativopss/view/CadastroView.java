@@ -43,7 +43,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
         txtSenha = new javax.swing.JPasswordField();
         txtSenhaRepeticao = new javax.swing.JPasswordField();
         ckbAdmin = new javax.swing.JCheckBox();
-        jButton1 = new javax.swing.JButton();
+        btnRemover = new javax.swing.JButton();
 
         jLabel1.setText("Nome");
 
@@ -59,7 +59,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
 
         ckbAdmin.setText("Administrador");
 
-        jButton1.setText("Remover");
+        btnRemover.setText("Remover");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,7 +87,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(ckbAdmin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
+                        .addComponent(btnRemover)
                         .addGap(18, 18, 18)
                         .addComponent(btnSalvar)
                         .addGap(18, 18, 18)
@@ -118,7 +118,7 @@ public class CadastroView extends javax.swing.JInternalFrame {
                     .addComponent(btnSalvar)
                     .addComponent(btnFechar)
                     .addComponent(ckbAdmin)
-                    .addComponent(jButton1))
+                    .addComponent(btnRemover))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -149,6 +149,15 @@ public class CadastroView extends javax.swing.JInternalFrame {
         this.txtNome = txtNome;
     }
 
+    public JButton getBtnRemover() {
+        return btnRemover;
+    }
+
+    public void setBtnRemover(JButton btnRemover) {
+        this.btnRemover = btnRemover;
+    }
+
+    
     public JPasswordField getTxtSenha() {
         return txtSenha;
     }
@@ -183,9 +192,9 @@ public class CadastroView extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JCheckBox ckbAdmin;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
