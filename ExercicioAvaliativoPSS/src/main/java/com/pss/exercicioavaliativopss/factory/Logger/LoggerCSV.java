@@ -3,13 +3,10 @@ package com.pss.exercicioavaliativopss.factory.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import com.opencsv.CSVWriter;
 import com.pss.exercicioavaliativopss.model.Log;
-import com.pss.exercicioavaliativopss.model.UsuarioModel;
 
 public class LoggerCSV implements InterfaceLogger {
 

@@ -28,6 +28,11 @@ public class LoggerJSON implements InterfaceLogger {
         }
 
         file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao criar arquivo! " + e.getMessage());
+        }
     }
 
     @Override

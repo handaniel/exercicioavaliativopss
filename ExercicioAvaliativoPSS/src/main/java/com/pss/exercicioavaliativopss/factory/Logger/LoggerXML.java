@@ -2,7 +2,10 @@ package com.pss.exercicioavaliativopss.factory.Logger;
 
 import com.pss.exercicioavaliativopss.model.Log;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -25,6 +28,11 @@ public class LoggerXML implements InterfaceLogger {
         }
 
         file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao criar arquivo! " + e.getMessage());
+        }
     }
 
     @Override

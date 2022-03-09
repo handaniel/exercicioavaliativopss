@@ -124,9 +124,9 @@ public class NotificacaoDAO {
     }
 
     public void marcarComoLida(int id) {
-        String query = "update usuario "
+        String query = "update notificacao "
                 + "set lida = 1 "
-                + "where id = ?";
+                + "where id = ? ";
 
         try {
             Connection conn = DBConnection.connect();
@@ -179,7 +179,7 @@ public class NotificacaoDAO {
 
             ResultSet res = stmt.executeQuery();
 
-            if (res.next()) {
+            while (res.next()) {
                 int id = res.getInt("id");
                 int des = res.getInt("destinatario");
                 int rem = res.getInt("remetente");
@@ -194,6 +194,37 @@ public class NotificacaoDAO {
             return lista;
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao recuperar notificações! " + e.getMessage());
+        }
+    }
+
+    public Notificacao getById(int id) {
+        String query = "select * from notificacao "
+                + "where id = ?";
+
+        try {
+            Connection conn = DBConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id);
+
+            ResultSet res = stmt.executeQuery();
+
+            Notificacao notificacao = null;
+
+            if (res.next()) {
+                notificacao = new Notificacao(res.getInt("id"),
+                        res.getInt("destinatario"),
+                        res.getInt("remetente"),
+                        res.getString("mensagem"),
+                        res.getDate("data").toLocalDate());
+            }
+
+            res.close();
+            stmt.close();
+            conn.close();
+
+            return notificacao;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao recuperar notificação!" + e.getMessage());
         }
     }
 
