@@ -136,7 +136,6 @@ public class PrincipalPresenter implements InterfaceObserver {
         if (UsuarioModel.class.isInstance(obj)) {
             update((UsuarioModel) obj);
         } else if (InterfaceLogger.class.isInstance(obj)) {
-            System.out.println(obj.getClass());
             if (LoggerCSV.class.isInstance(obj)) {
                 update((LoggerCSV) obj);
             } else if (LoggerJSON.class.isInstance(obj)) {
