@@ -16,8 +16,8 @@ public class NotificacaoDAO {
     public static void criarTabelaNotificacao() {
         String query = "create table if not exists notificacao("
                 + "id integer primary key autoincrement, "
-                + "destinatario integer not null references usuario (id), "
-                + "remetente integer not null references usuario (id), "
+                + "destinatario integer not null references usuario (id) on delete cascade , "
+                + "remetente integer not null references usuario (id) on delete cascade, "
                 + "mensagem varchar not null, "
                 + "lida integer default 0,"
                 + "data date not null)";
