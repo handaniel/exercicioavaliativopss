@@ -1,6 +1,7 @@
 package com.pss.exercicioavaliativopss.presenter;
 
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
+import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
 import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObservable;
 import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObserver;
@@ -15,11 +16,13 @@ public class LoginPresenter implements InterfaceObservable {
     private final LoginView view;
     private final UsuarioDAO dao;
     private final ArrayList<InterfaceObserver> observers;
+    private InterfaceLogger logger;
 
-    public LoginPresenter(JDesktopPane desktop) {
+    public LoginPresenter(JDesktopPane desktop, InterfaceLogger logger) {
         view = new LoginView();
         dao = new UsuarioDAO();
         observers = new ArrayList<>();
+        this.logger = logger;
 
         view.getBtnLogin().addActionListener(((ActionEvent ae) -> {
             login();
@@ -34,11 +37,7 @@ public class LoginPresenter implements InterfaceObservable {
     }
 
     private void cadastrar(JDesktopPane desktop) {
-        if (UsuarioDAO.contaUsuarios() == 0) {
-            new CadastroLoginPresenter(desktop, this, true);
-        } else {
-            new CadastroLoginPresenter(desktop, this, false);
-        }
+        new CadastroLoginPresenter(desktop, this, UsuarioDAO.contaUsuarios() == 0, logger);
 
         view.dispose();
 

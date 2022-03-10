@@ -157,7 +157,6 @@ public class NotificacaoDAO {
 
             stmt.executeUpdate();
 
-            System.out.println("enviada!" + notificacao.getMensagem());
             stmt.close();
             conn.close();
 
@@ -168,7 +167,8 @@ public class NotificacaoDAO {
 
     public ArrayList<Notificacao> getNotificacoes(int destinatario) {
         String query = "select * from notificacao "
-                + "where destinatario = ?";
+                + "where destinatario = ? "
+                + "order by lida asc";
 
         try {
             Connection conn = DBConnection.connect();
@@ -187,7 +187,7 @@ public class NotificacaoDAO {
                 boolean lida = res.getInt("lida") == 1;
                 LocalDate data = res.getDate("data").toLocalDate();
 
-                lista.add(new Notificacao(id, des, rem, msg, data));
+                lista.add(new Notificacao(id, des, rem, msg, lida, data));
 
             }
 
@@ -215,7 +215,9 @@ public class NotificacaoDAO {
                         res.getInt("destinatario"),
                         res.getInt("remetente"),
                         res.getString("mensagem"),
-                        res.getDate("data").toLocalDate());
+                        res.getInt("lida") == 1,
+                        res.getDate("data").toLocalDate()
+                );
             }
 
             res.close();

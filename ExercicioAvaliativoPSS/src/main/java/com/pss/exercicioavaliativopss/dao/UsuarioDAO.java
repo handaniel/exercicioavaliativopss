@@ -117,7 +117,7 @@ public class UsuarioDAO {
     }
 
     public void delete(int id) {
-        String query = "delete from usuario where id = ?)";
+        String query = "delete from usuario where id = ?";
 
         try {
 
@@ -379,10 +379,10 @@ public class UsuarioDAO {
     }
 
     public ArrayList<UsuarioModel> procura(String texto) {
-        String query = "select * from usuario"
+        String query = "select * from usuario "
                 + "where cast(id as char) like ? or "
-                + "name like ? or"
-                + "username like ?"
+                + "nome like ? or "
+                + "username like ? "
                 + "order by nome";
 
         try {

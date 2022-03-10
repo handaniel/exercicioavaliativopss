@@ -4,7 +4,10 @@ import com.pss.exercicioavaliativopss.dao.NotificacaoDAO;
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
 import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
 import com.pss.exercicioavaliativopss.model.Admin;
+import com.pss.exercicioavaliativopss.model.Log;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObservable;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObserver;
 import com.pss.exercicioavaliativopss.view.ListarUsuariosView;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -12,14 +15,15 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class ListarUsuariosPresenter {
+public class ListarUsuariosPresenter implements InterfaceObservable {
 
     private final ListarUsuariosView view;
     private final UsuarioDAO uDao;
     private final NotificacaoDAO nDao;
-    private DefaultTableModel tmUsuarios;
+    private final DefaultTableModel tmUsuarios;
     private Admin admin;
     private InterfaceLogger logger;
+    private ArrayList<InterfaceObserver> observers;
 
     public ListarUsuariosPresenter(Admin admin, JDesktopPane desktop, InterfaceLogger logger) {
         view = new ListarUsuariosView();
@@ -27,6 +31,7 @@ public class ListarUsuariosPresenter {
         nDao = new NotificacaoDAO();
         this.admin = admin;
         this.logger = logger;
+        observers = new ArrayList<>();
 
         tmUsuarios = new DefaultTableModel(
                 new Object[][]{},
@@ -40,9 +45,7 @@ public class ListarUsuariosPresenter {
         view.getTblUsuarios().setModel(tmUsuarios);
         preencheTabela();
 
-        view.getBtnAutorizar().setEnabled(false);
-        view.getBtnEnviarNotificacao().setEnabled(false);
-        view.getBtnVisualizar().setEnabled(false);
+        resetaBotoes();
 
         view.getTblUsuarios().getSelectionModel().addListSelectionListener(((lse) -> {
 
@@ -69,7 +72,18 @@ public class ListarUsuariosPresenter {
         });
 
         view.getBtnAutorizar().addActionListener((ActionEvent ae) -> {
-            autorizar();
+            int id = Integer.parseInt(view.getTblUsuarios().getValueAt(view.getTblUsuarios().getSelectedRow(), 0).toString());
+            UsuarioModel temp = uDao.findById(id);
+            autorizar(temp);
+            resetaBotoes();
+            limpaTabela();
+            preencheTabela();
+        });
+
+        view.getBtnBuscar().addActionListener((ActionEvent ae) -> {
+            resetaBotoes();
+            limpaTabela();
+            busca();
         });
 
         view.getBtnVisualizar().addActionListener((ActionEvent ae) -> {
@@ -77,40 +91,85 @@ public class ListarUsuariosPresenter {
             int id = Integer.parseInt(view.getTblUsuarios().getValueAt(row, 0).toString());
             if (id >= 1) {
                 UsuarioModel temp = uDao.findById(id);
-                new CadastroPresenter(desktop, Admin.class.isInstance(temp), temp);
+                view.dispose();
+                new CadastroPresenter(desktop, Admin.class.isInstance(temp), temp, logger);
             }
+            resetaBotoes();
+            limpaTabela();
+            preencheTabela();
         });
 
         view.getBtnEnviarNotificacao().addActionListener(((ActionEvent ae) -> {
             notificacao(desktop);
+            resetaBotoes();
+            limpaTabela();
+            preencheTabela();
         }));
 
         view.getBtnAddUsuario().addActionListener((ActionEvent ae) -> {
-            new CadastroPresenter(desktop, true);
+            new CadastroPresenter(desktop, true, logger);
+            limpaTabela();
+            preencheTabela();
         });
 
         desktop.add(view);
         view.setVisible(true);
     }
 
-    private void autorizar() {
-        int id = Integer.parseInt(view.getTblUsuarios().getValueAt(view.getTblUsuarios().getSelectedRow(), 0).toString());
-        uDao.autorizar(id);
-        JOptionPane.showMessageDialog(view, "Usuário autorizado!");
-        preencheTabela();
+    private void autorizar(UsuarioModel temp) {
+        try {
+            uDao.autorizar(temp.getId());
+            logger.logUsuarioCRUD(new Log("Autorização", temp.getNome(), admin.getUsername(), "-"));
+            JOptionPane.showMessageDialog(view, "Usuário autorizado!");
+            preencheTabela();
+        } catch (RuntimeException e) {
+            logger.logFalha(new Log("Autorização", temp.getNome(), temp.getUsername(), e.getMessage()));
+        }
+    }
+
+    private void resetaBotoes() {
+        view.getBtnAutorizar().setEnabled(false);
+        view.getBtnEnviarNotificacao().setEnabled(false);
+        view.getBtnVisualizar().setEnabled(false);
+    }
+
+    private void limpaTabela() {
+        tmUsuarios.setRowCount(0);
+        view.getTblUsuarios().setModel(tmUsuarios);
+    }
+
+    private void busca() {
+        String texto = view.getTxtBusca().getText();
+
+        if (!texto.isEmpty() || !texto.isBlank()) {
+
+            ArrayList<UsuarioModel> lista = uDao.procura(texto);
+
+            if (!lista.isEmpty()) {
+                for (UsuarioModel u : lista) {
+                    int lida = nDao.contaNotificacao(u.getId());
+                    int nLida = nDao.contaNotificacaoLida(u.getId());
+                    if (!admin.equals(u.getUsername())) {
+                        tmUsuarios.addRow(new Object[]{u.getId(), u.getNome(), u.getDataCadastro(), lida, nLida});
+                    }
+                }
+                view.getTblUsuarios().setModel(tmUsuarios);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(view, "Busca inválida!");
+        }
     }
 
     private void preencheTabela() {
-        tmUsuarios.setRowCount(0);
-        view.getTblUsuarios().setModel(tmUsuarios);
 
         ArrayList<UsuarioModel> lista = uDao.listarUsuarios();
 
         if (!lista.isEmpty()) {
             for (UsuarioModel u : lista) {
-                int lida = nDao.contaNotificacaoLida(u.getId());
-                int nLida = nDao.contaNotificacaoNaoLida(u.getId());
-                if (!admin.equals(u.getUsername())) {
+                int lida = nDao.contaNotificacao(u.getId());
+                int nLida = nDao.contaNotificacaoLida(u.getId());
+                if (admin.getId() != u.getId()) {
                     tmUsuarios.addRow(new Object[]{u.getId(), u.getNome(), u.getDataCadastro(), lida, nLida});
                 }
             }
@@ -139,6 +198,23 @@ public class ListarUsuariosPresenter {
 
     public ListarUsuariosView getView() {
         return view;
+    }
+
+    @Override
+    public void addObserver(InterfaceObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(InterfaceObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObserver(Object obj) {
+        for (InterfaceObserver o : observers) {
+            o.update(obj);
+        }
     }
 
 }

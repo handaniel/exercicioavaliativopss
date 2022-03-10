@@ -1,23 +1,32 @@
 package com.pss.exercicioavaliativopss.presenter;
 
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
+import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
 import com.pss.exercicioavaliativopss.model.Admin;
+import com.pss.exercicioavaliativopss.model.Log;
 import com.pss.exercicioavaliativopss.model.Usuario;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObservable;
+import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObserver;
 import com.pss.exercicioavaliativopss.view.CadastroView;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
-public class CadastroPresenter {
+public class CadastroPresenter implements InterfaceObservable {
 
     private final CadastroView view;
     private final UsuarioDAO dao;
+    private InterfaceLogger logger;
+    private ArrayList<InterfaceObserver> observers;
 
-    public CadastroPresenter(JDesktopPane desktop, boolean admin) {
+    public CadastroPresenter(JDesktopPane desktop, boolean admin, InterfaceLogger logger) {
         view = new CadastroView();
         dao = new UsuarioDAO();
+        this.logger = logger;
+        observers = new ArrayList<>();
 
         view.getCkbAdmin().setVisible(admin);
 
@@ -36,9 +45,11 @@ public class CadastroPresenter {
         view.setVisible(true);
     }
 
-    public CadastroPresenter(JDesktopPane desktop, boolean admin, UsuarioModel usuario, boolean editar) {
+    public CadastroPresenter(JDesktopPane desktop, boolean admin, UsuarioModel usuario, boolean editar, InterfaceLogger logger) {
         view = new CadastroView();
         dao = new UsuarioDAO();
+        this.logger = logger;
+        observers = new ArrayList<>();
 
         view.getCkbAdmin().setVisible(admin);
         view.getCkbAdmin().setSelected(admin);
@@ -64,9 +75,10 @@ public class CadastroPresenter {
         view.setVisible(true);
     }
 
-    public CadastroPresenter(JDesktopPane desktop, boolean admin, UsuarioModel usuario) {
+    public CadastroPresenter(JDesktopPane desktop, boolean admin, UsuarioModel usuario, InterfaceLogger logger) {
         view = new CadastroView();
         dao = new UsuarioDAO();
+        this.logger = logger;
 
         view.getCkbAdmin().setVisible(admin);
         view.getCkbAdmin().setSelected(admin);
@@ -90,12 +102,12 @@ public class CadastroPresenter {
         });
 
         view.getBtnSalvar().addActionListener((ActionEvent ae) -> {
-            new CadastroPresenter(desktop, admin, usuario, true);
+            new CadastroPresenter(desktop, admin, usuario, true, logger);
             view.dispose();
         });
 
         view.getBtnRemover().addActionListener((ActionEvent ae) -> {
-            remover(usuario.getId());
+            remover(usuario);
             view.dispose();
         });
 
@@ -103,11 +115,13 @@ public class CadastroPresenter {
         view.setVisible(true);
     }
 
-    private void remover(int id) {
+    private void remover(UsuarioModel usuario) {
         try {
-            dao.delete(id);
+            dao.delete(usuario.getId());
+            logger.logUsuarioCRUD(new Log("Remoção", usuario.getNome(), usuario.getUsername(), "-"));
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(view, "Erro ao deletar usuário!" + e.getMessage());
+            logger.logFalha(new Log("Remoção", usuario.getNome(), usuario.getUsername(), e.getMessage()));
         }
     }
 
@@ -123,16 +137,19 @@ public class CadastroPresenter {
             JOptionPane.showMessageDialog(view, "Senhas não coincidem");
         } else {
             try {
+
                 if (admin) {
                     dao.update(new Admin(usuario.getId(), nome, username, senha, data));
                 } else {
                     dao.update(new Usuario(usuario.getId(), nome, username, senha, data, false));
                 }
 
-                JOptionPane.showMessageDialog(view, "Usuário " + nome + " atualizado com sucesso!");
+                logger.logUsuarioCRUD(new Log("Atualização", nome, username, "-"));
+                JOptionPane.showMessageDialog(view, "Usuário " + nome + " atualizado com sucesso! \n Logue novamente para alterar nickname");
 
             } catch (RuntimeException e) {
                 JOptionPane.showMessageDialog(view, "Erro ao Atualizar usuário!" + e.getMessage());
+                logger.logFalha(new Log("Atualização", nome, username, e.getMessage()));
             }
         }
 
@@ -152,16 +169,18 @@ public class CadastroPresenter {
             JOptionPane.showMessageDialog(view, "Nome de usuário existente.");
         } else {
             try {
+
                 if (admin) {
                     dao.inserir(new Admin(nome, username, senha, data));
                 } else {
                     dao.inserir(new Usuario(nome, username, senha, data, false));
                 }
-
+                logger.logUsuarioCRUD(new Log("Cadastro", nome, username, "-"));
                 JOptionPane.showMessageDialog(view, "Usuário " + nome + " cadastrado com sucesso!");
 
             } catch (RuntimeException e) {
                 JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário!");
+                logger.logFalha(new Log("Cadastro", nome, username, e.getMessage()));
             }
         }
 
@@ -169,6 +188,23 @@ public class CadastroPresenter {
 
     public CadastroView getView() {
         return view;
+    }
+
+    @Override
+    public void addObserver(InterfaceObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(InterfaceObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObserver(Object obj) {
+        for (InterfaceObserver o : observers) {
+            o.update((UsuarioModel) obj);
+        }
     }
 
 }

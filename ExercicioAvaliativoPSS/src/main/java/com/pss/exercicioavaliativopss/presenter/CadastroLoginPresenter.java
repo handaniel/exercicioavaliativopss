@@ -1,7 +1,9 @@
 package com.pss.exercicioavaliativopss.presenter;
 
 import com.pss.exercicioavaliativopss.dao.UsuarioDAO;
+import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
 import com.pss.exercicioavaliativopss.model.Admin;
+import com.pss.exercicioavaliativopss.model.Log;
 import com.pss.exercicioavaliativopss.model.Usuario;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
 import com.pss.exercicioavaliativopss.model.interfaces.InterfaceObservable;
@@ -18,11 +20,13 @@ public class CadastroLoginPresenter implements InterfaceObservable {
     private final CadastroLoginView view;
     private final UsuarioDAO dao;
     private final ArrayList<InterfaceObserver> observers;
+    private InterfaceLogger logger;
 
-    public CadastroLoginPresenter(JDesktopPane desktop, LoginPresenter login, boolean primeiro) {
+    public CadastroLoginPresenter(JDesktopPane desktop, LoginPresenter login, boolean primeiro, InterfaceLogger logger) {
         view = new CadastroLoginView();
         dao = new UsuarioDAO();
         observers = new ArrayList<>();
+        this.logger = logger;
 
         if (primeiro) {
             view.getCkbAdmin().setVisible(true);
@@ -66,10 +70,11 @@ public class CadastroLoginPresenter implements InterfaceObservable {
                     usuario = new Usuario(nome, username, senha, data, false);
                 }
                 dao.inserir(usuario);
+                logger.logUsuarioCRUD(new Log("Cadastro", nome, username, "-"));
                 JOptionPane.showMessageDialog(view, "Usuário " + nome + " cadastrado com sucesso!");
 
                 ArrayList<InterfaceObserver> temp = login.getObservers();
-                login = new LoginPresenter(desktop);
+                login = new LoginPresenter(desktop, logger);
 
                 for (InterfaceObserver o : temp) {
                     login.addObserver(o);
@@ -77,6 +82,7 @@ public class CadastroLoginPresenter implements InterfaceObservable {
 
             } catch (RuntimeException e) {
                 JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário!");
+                logger.logFalha(new Log("Cadstro", nome, username, e.getMessage()));
             }
         }
 

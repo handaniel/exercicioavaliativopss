@@ -68,7 +68,13 @@ public class ConfiguracoesPresenter implements InterfaceObservable {
     @Override
     public void notifyObserver(Object obj) {
         for (InterfaceObserver o : observers) {
-            o.update((InterfaceLogger) obj);
+            if (LoggerCSV.class.isInstance(obj)) {
+                o.update((LoggerCSV) obj);
+            } else if (LoggerJSON.class.isInstance(obj)) {
+                o.update((LoggerJSON) obj);
+            } else if (LoggerXML.class.isInstance(obj)) {
+                o.update((LoggerXML) obj);
+            }
         }
     }
 

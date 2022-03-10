@@ -2,9 +2,11 @@ package com.pss.exercicioavaliativopss.presenter;
 
 import com.pss.exercicioavaliativopss.dao.NotificacaoDAO;
 import com.pss.exercicioavaliativopss.factory.Logger.InterfaceLogger;
+import com.pss.exercicioavaliativopss.factory.Logger.LoggerCSV;
 import com.pss.exercicioavaliativopss.factory.Logger.LoggerJSON;
 import com.pss.exercicioavaliativopss.factory.Logger.LoggerXML;
 import com.pss.exercicioavaliativopss.model.Admin;
+import com.pss.exercicioavaliativopss.model.Notificacao;
 import com.pss.exercicioavaliativopss.model.UsuarioModel;
 import com.pss.exercicioavaliativopss.model.state.LoginState;
 import com.pss.exercicioavaliativopss.view.PrincipalView;
@@ -24,25 +26,26 @@ public class PrincipalPresenter implements InterfaceObserver {
 
     public PrincipalPresenter() {
         view = new PrincipalView();
-        logger = new LoggerXML();
+        //Logger padrão CSV
+        logger = new LoggerCSV();
         nDao = new NotificacaoDAO();
 
         setState(new UsuarioLoggedOutState(this));
 
         view.getMnuListUsuario().addActionListener((ActionEvent ae) -> {
-            new ListarUsuariosPresenter((Admin) usuario, view.getDesktop(), logger);
+            new ListarUsuariosPresenter((Admin) usuario, view.getDesktop(), logger).addObserver(this);
         });
 
         view.getMnuLogs().addActionListener((ActionEvent ae) -> {
-            new ConfiguracoesPresenter(view.getDesktop(), logger);
+            new ConfiguracoesPresenter(view.getDesktop(), logger).addObserver(this);
         });
 
         view.getMnuAlterar().addActionListener((ActionEvent ae) -> {
-            new CadastroPresenter(view.getDesktop(), Admin.class.isInstance(usuario), usuario, true);
+            new CadastroPresenter(view.getDesktop(), Admin.class.isInstance(usuario), usuario, true, logger).addObserver(this);
         });
 
         view.getBtnNotificacoes().addActionListener((ActionEvent ae) -> {
-            new NotificacoesPresenter(view.getDesktop(), usuario, logger);
+            new NotificacoesPresenter(view.getDesktop(), usuario, logger).addObserver(this);
         });
 
         view.getMnuLogout().addActionListener((ActionEvent ae) -> {
@@ -51,16 +54,15 @@ public class PrincipalPresenter implements InterfaceObserver {
 
         view.setVisible(true);
     }
-    
-    public void usuarioLayout(){
+
+    public void usuarioLayout() {
         view.getLblTipoUser().setText("Usuário");
         view.getLblUser().setText(usuario.getUsername());
         view.getBtnNotificacoes().setText("Notificações");
         view.getMnuUsuario().setVisible(true);
         view.getMnuConfiguracoes().setVisible(true);
         view.getBtnNotificacoes().setEnabled(true);
-        int qtd = nDao.contaNotificacaoNaoLida(usuario.getId());
-        view.getBtnNotificacoes().setText(qtd + " Notificações");
+        atualizaNotificacao();
     }
 
     public void adminLayout() {
@@ -72,12 +74,20 @@ public class PrincipalPresenter implements InterfaceObserver {
         view.getMnuConfiguracoes().setVisible(true);
         view.getBtnNotificacoes().setEnabled(true);
         view.getBtnNotificacoes().setText("Notificações");
+        atualizaNotificacao();
+    }
+
+    private void login() {
+        new LoginPresenter(view.getDesktop(), logger).addObserver(this);
+    }
+
+    private void atualizaNotificacao() {
         int qtd = nDao.contaNotificacaoNaoLida(usuario.getId());
         view.getBtnNotificacoes().setText(qtd + " Notificações");
     }
 
-    private void login() {
-        new LoginPresenter(view.getDesktop()).addObserver(this);
+    private void update() {
+        atualizaNotificacao();
     }
 
     private void update(UsuarioModel usuario) {
@@ -88,9 +98,6 @@ public class PrincipalPresenter implements InterfaceObserver {
     private void update(InterfaceLogger logger) {
         this.logger = logger;
 
-        fechaInternalFrames();
-
-        setState(new UsuarioLoggedOutState(this));
     }
 
     private void fechaInternalFrames() {
@@ -102,6 +109,10 @@ public class PrincipalPresenter implements InterfaceObserver {
     private void logout() {
         fechaInternalFrames();
         state.logout();
+    }
+
+    public InterfaceLogger getLogger() {
+        return logger;
     }
 
     public void setState(LoginState state) {
@@ -125,9 +136,17 @@ public class PrincipalPresenter implements InterfaceObserver {
         if (UsuarioModel.class.isInstance(obj)) {
             update((UsuarioModel) obj);
         } else if (InterfaceLogger.class.isInstance(obj)) {
-            update((InterfaceLogger) logger);
+            System.out.println(obj.getClass());
+            if (LoggerCSV.class.isInstance(obj)) {
+                update((LoggerCSV) obj);
+            } else if (LoggerJSON.class.isInstance(obj)) {
+                update((LoggerJSON) obj);
+            } else if (LoggerXML.class.isInstance(obj)) {
+                update((LoggerXML) obj);
+            }
+        } else if (Notificacao.class.isInstance(obj)) {
+            update();
         }
 
     }
-
 }

@@ -30,6 +30,7 @@ public class EnviarNotificacaoPresenter implements InterfaceObservable {
         observers = new ArrayList<>();
         dao = new NotificacaoDAO();
         this.admin = admin;
+        this.logger = logger;
 
         view.getBtnFechar().addActionListener((ActionEvent ae) -> {
             view.dispose();
@@ -48,12 +49,12 @@ public class EnviarNotificacaoPresenter implements InterfaceObservable {
 
         try {
             for (Integer id : users) {
-                dao.inserirNotificacao(new Notificacao(id, admin.getId(), msg, LocalDate.now()));
+                dao.inserirNotificacao(new Notificacao(id, admin.getId(), msg, false, LocalDate.now()));
             }
 
             JOptionPane.showMessageDialog(view, "Mensagem enviada com Sucesso!");
 
-            //logger.logUsuarioCRUD(new Log("Envio de notificação", admin.getNome(), admin.getUsername(), ""));
+            logger.logUsuarioCRUD(new Log("Envio de notificação", admin.getNome(), admin.getUsername(), "-"));
             notifyObserver(null);
             view.dispose();
         } catch (RuntimeException e) {

@@ -17,7 +17,7 @@ public class UsuarioLoggedOutState extends LoginState {
         presenter.getView().getMnuUsuario().setVisible(false);
         presenter.getView().getMnuConfiguracoes().setVisible(false);
         presenter.getView().getBtnNotificacoes().setEnabled(false);
-        new LoginPresenter(presenter.getView().getDesktop()).addObserver(presenter);
+        new LoginPresenter(presenter.getView().getDesktop(), presenter.getLogger()).addObserver(presenter);
     }
 
     @Override
