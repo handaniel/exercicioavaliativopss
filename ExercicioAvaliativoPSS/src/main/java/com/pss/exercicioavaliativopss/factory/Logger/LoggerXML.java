@@ -1,14 +1,14 @@
 package com.pss.exercicioavaliativopss.factory.Logger;
 
 import com.pss.exercicioavaliativopss.model.Log;
+import com.thoughtworks.xstream.XStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class LoggerXML implements InterfaceLogger {
 
@@ -38,17 +38,14 @@ public class LoggerXML implements InterfaceLogger {
     @Override
     public void logUsuarioCRUD(Log log) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Log.class);
+            XStream stream = new XStream();
+            stream.alias("UsuarioCRUD", Log.class);
 
-            Marshaller marshaller = jaxbContext.createMarshaller();
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(stream.toXML(log) + "\n");
+            writer.close();
 
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            StringWriter sw = new StringWriter();
-
-            marshaller.marshal(log, sw);
-
-        } catch (JAXBException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Erro ao gravar Log!" + e.getMessage());
         }
     }
@@ -56,17 +53,13 @@ public class LoggerXML implements InterfaceLogger {
     @Override
     public void logFalha(Log log) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Log.class);
+            XStream stream = new XStream();
+            stream.alias("Falha", Log.class);
 
-            Marshaller marshaller = jaxbContext.createMarshaller();
-
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            StringWriter sw = new StringWriter();
-
-            marshaller.marshal(log, sw);
-
-        } catch (JAXBException e) {
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(stream.toXML(log) + "\n");
+            writer.close();
+        } catch (IOException e) {
             throw new RuntimeException("Erro ao gravar Log!" + e.getMessage());
         }
     }

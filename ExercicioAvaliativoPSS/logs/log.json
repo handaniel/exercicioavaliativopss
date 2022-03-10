@@ -1,0 +1,4 @@
+{"OPERACAO":"operação","DATA":"10\/03\/2022","NOME":"nome","USUARIO":"username","HORA":"10:43:18"},
+{"OPERACAO":"operação","DATA":"10\/\/03\/\/2022","HORA":"10:43:18","NOME":"nome","EXCESSAO":"excecao","USUARIO":"username"}
+{"OPERACAO":"operação","DATA":"10\/03\/2022","NOME":"nome","USUARIO":"username","HORA":"10:44:07"},
+{"OPERACAO":"operação","DATA":"10-03-2022","HORA":"10:44:07","NOME":"nome","EXCESSAO":"excecao","USUARIO":"username"}

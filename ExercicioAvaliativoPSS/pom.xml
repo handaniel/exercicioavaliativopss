@@ -40,5 +40,12 @@
             <artifactId>ValidadorSenha</artifactId>
             <version>1.08-SNAPSHOT</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.19</version>
+        </dependency>
+
     </dependencies>
 </project>

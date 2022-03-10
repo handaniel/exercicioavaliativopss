@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
-
 import org.json.simple.JSONObject;
 
 public class LoggerJSON implements InterfaceLogger {
@@ -62,9 +61,9 @@ public class LoggerJSON implements InterfaceLogger {
         HashMap<String, Object> hashObject = new HashMap<>();
 
         hashObject.put("EXCESSAO", log.getExcecao());
-        hashObject.put("OPERACAO", log.getExcecao());
+        hashObject.put("OPERACAO", log.getOperacao());
         hashObject.put("NOME", log.getNome());
-        hashObject.put("DATA", log.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        hashObject.put("DATA", log.getData().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         hashObject.put("HORA", log.getHora().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         hashObject.put("USUARIO", log.getUsername());
 

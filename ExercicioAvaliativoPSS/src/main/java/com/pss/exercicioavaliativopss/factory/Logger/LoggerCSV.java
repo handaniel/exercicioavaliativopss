@@ -64,7 +64,7 @@ public class LoggerCSV implements InterfaceLogger {
             };
 
             CSVWriter writer = new CSVWriter(
-                    new FileWriter(file),
+                    new FileWriter(file, true),
                     ';',
                     CSVWriter.NO_QUOTE_CHARACTER,
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
@@ -91,7 +91,7 @@ public class LoggerCSV implements InterfaceLogger {
             };
 
             CSVWriter writer = new CSVWriter(
-                    new FileWriter(file),
+                    new FileWriter(file, true),
                     ';',
                     CSVWriter.NO_QUOTE_CHARACTER,
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,

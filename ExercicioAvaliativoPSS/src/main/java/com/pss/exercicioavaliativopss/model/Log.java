@@ -1,8 +1,10 @@
 package com.pss.exercicioavaliativopss.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@XStreamAlias("log")
 public class Log {
 
     private String operacao;
