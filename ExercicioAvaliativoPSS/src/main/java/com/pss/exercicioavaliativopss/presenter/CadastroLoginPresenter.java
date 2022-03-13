@@ -81,7 +81,7 @@ public class CadastroLoginPresenter implements InterfaceObservable {
                 }
 
             } catch (RuntimeException e) {
-                JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário!");
+                JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário! " + e.getMessage());
                 logger.logFalha(new Log("Cadstro", nome, username, e.getMessage()));
             }
         }

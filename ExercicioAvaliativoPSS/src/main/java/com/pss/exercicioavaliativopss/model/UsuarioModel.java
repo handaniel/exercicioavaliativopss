@@ -64,7 +64,7 @@ public abstract class UsuarioModel {
         return senha;
     }
 
-    public void setSenha(String senha) {
+    public void setSenha(String senha) throws RuntimeException {
         ValidadorSenha validador = new ValidadorSenha();
         List<String> lista = validador.validar(senha);
         if (lista.isEmpty()) {
